@@ -1,0 +1,61 @@
+name: React Test & Lint
+
+on:
+  push:
+    branches:
+      - "**"
+    paths:
+      - "src/**"
+      - "__tests__/**"
+      - "*.js"
+      - "*.jsx"
+      - "*.ts"
+      - "*.tsx"
+      - "*.json"
+      - "codecov.yml"
+      - ".github/workflows/test.yml"
+
+jobs:
+  ci-skip-check:
+    runs-on: ubuntu-latest
+    if: "! contains(github.event.head_commit.message, '[ci skip]')"
+    steps:
+      - run: echo "${{ github.event.head_commit.message }}"
+
+  jest:
+    runs-on: ubuntu-latest
+    needs: ci-skip-check
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.13.1"
+      - name: Cache npm
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - run: yarn install
+      - run: yarn test
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: ci-skip-check
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.13.1"
+      - name: Cache npm
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - run: npm install
+      - run: npm run lint
