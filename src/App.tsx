@@ -3,7 +3,7 @@ import React from 'react';
 const App: React.FC = () => {
   return (
     <div>
-      <h1>learn react</h1>
+      <h1>Blog Analytics Dashboard</h1>
     </div>
   );
 };
