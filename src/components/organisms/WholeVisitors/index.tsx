@@ -2,7 +2,6 @@ import 'dayjs/locale/ja';
 
 import React, { memo } from 'react';
 import dayjs from 'dayjs';
-import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 
@@ -14,10 +13,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const preventDefault = (
-  event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-): void => event.preventDefault();
-
 const WholeVisitors: React.FC = () => {
   const classes = useStyles();
   return (
@@ -27,7 +22,8 @@ const WholeVisitors: React.FC = () => {
         114,515人
       </Typography>
       <Typography color="textSecondary" className={classes.depositContext}>
-        {dayjs().format('YYYY/MM/DD hh:mm')}時点
+        {dayjs().format('YYYY/MM/DD hh:mm')}
+        時点
       </Typography>
     </>
   );
