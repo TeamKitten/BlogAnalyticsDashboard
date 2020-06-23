@@ -1,19 +1,15 @@
 import React, { memo } from 'react';
-import { Typography } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 
-const Copyright: React.FC = () => {
-  const fullYear = new Date().getFullYear();
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      Copyright ©&nbsp;
-      {fullYear}
-      &nbsp;
-      <Link color="inherit" href="https://teamkitten.me/">
-        TeamKitten
-      </Link>
-    </Typography>
-  );
-};
+const Copyright: React.FC = () => (
+  <Typography variant="body2" color="textSecondary" align="center">
+    {'Copyright © '}
+    <Link color="inherit" href="https://material-ui.com/">
+      TeamKitten&nbsp;
+    </Link>
+    {new Date().getFullYear()}
+  </Typography>
+);
 
 export default memo(Copyright);

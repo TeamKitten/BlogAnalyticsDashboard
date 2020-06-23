@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Typography } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 
 type Props = {
   children: React.ReactNode;

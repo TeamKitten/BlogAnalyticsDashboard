@@ -1,12 +1,17 @@
-import React, { memo } from 'react';
-import Container from '@material-ui/core/Container';
+import React, { memo, useCallback } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import GitHubIcon from '@material-ui/icons/GitHub';
+import firebase from 'firebase/app';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { Redirect } from 'react-router-dom';
+import ErrorPage from '../ErrorPage';
 import Copyright from '../../atoms/Copyright';
+import Loading from '../Loading';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -16,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   button: {
-    margin: theme.spacing(2),
+    margin: theme.spacing(1),
   },
   main: {
     width: '100%',
@@ -27,12 +32,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NoMatchPage: React.FC<RouteComponentProps> = ({
-  history,
-}: RouteComponentProps) => {
+const Login: React.FC = () => {
   const classes = useStyles();
+  const [user, loading, error] = useAuthState(firebase.auth());
 
-  const toTopPage = (): void => history.replace('/');
+  const signInWithGitHub = useCallback(() => {
+    const provider = new firebase.auth.GithubAuthProvider();
+    firebase.auth().signInWithRedirect(provider);
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <ErrorPage error={error} />;
+  }
+
+  if (user) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -42,17 +61,15 @@ const NoMatchPage: React.FC<RouteComponentProps> = ({
           TeamKitten Blog Analytics
         </Typography>
         <div className={classes.main}>
-          <Typography color="error" component="h2" variant="h6">
-            404 Not Found.
-          </Typography>
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
             className={classes.button}
+            startIcon={<GitHubIcon />}
             size="large"
-            onClick={toTopPage}
+            onClick={signInWithGitHub}
           >
-            TOP
+            GitHubでログイン
           </Button>
         </div>
       </div>
@@ -64,4 +81,4 @@ const NoMatchPage: React.FC<RouteComponentProps> = ({
   );
 };
 
-export default memo(withRouter(NoMatchPage));
+export default memo(Login);

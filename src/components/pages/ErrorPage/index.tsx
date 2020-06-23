@@ -1,12 +1,16 @@
 import React, { memo } from 'react';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import Copyright from '../../atoms/Copyright';
+
+interface Props extends RouteComponentProps {
+  error: Error | firebase.auth.Error;
+}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -27,11 +31,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NoMatchPage: React.FC<RouteComponentProps> = ({
-  history,
-}: RouteComponentProps) => {
+const ErrorPage: React.FC<Props> = ({ error, history }: Props) => {
   const classes = useStyles();
-
   const toTopPage = (): void => history.replace('/');
 
   return (
@@ -42,8 +43,9 @@ const NoMatchPage: React.FC<RouteComponentProps> = ({
           TeamKitten Blog Analytics
         </Typography>
         <div className={classes.main}>
-          <Typography color="error" component="h2" variant="h6">
-            404 Not Found.
+          <Typography component="h2" color="error" variant="h6">
+            AN ERRROR OCCURRED:
+            {` ${error.message}`}
           </Typography>
           <Button
             variant="contained"
@@ -64,4 +66,4 @@ const NoMatchPage: React.FC<RouteComponentProps> = ({
   );
 };
 
-export default memo(withRouter(NoMatchPage));
+export default memo(withRouter(ErrorPage));
