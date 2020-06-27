@@ -1,31 +1,30 @@
 import React, { memo, useState } from 'react';
+import firebase from 'firebase';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  CssBaseline,
-  AppBar,
-  Theme,
-  Toolbar,
-  IconButton,
-  Drawer,
-  List,
-  Divider,
-  Container,
-  Grid,
-  Paper,
-  Box,
-  Typography,
-} from '@material-ui/core';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import mainListItems from './listItems';
 import Copyright from '../../atoms/Copyright';
 import Chart from '../../organisms/Chart';
 import WholeVisitors from '../../organisms/WholeVisitors';
+import MainListItems from './listItems';
+import LogoutConfirmModal from '../../organisms/LogoutConfirmModal';
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
@@ -115,8 +114,18 @@ const HomePage: React.FC = () => {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+  const [signOutConfirmModalShow, setSignOutConfirmModalShow] = useState(false);
+  const handleSignOutModalClose = (): void => setSignOutConfirmModalShow(false);
+  const signOutClick = (): void => setSignOutConfirmModalShow(true);
+  const doSignOut = (): Promise<void> => firebase.auth().signOut();
+
   return (
     <div className={classes.root}>
+      <LogoutConfirmModal
+        onConfirmed={doSignOut}
+        onClose={handleSignOutModalClose}
+        open={signOutConfirmModalShow}
+      />
       <CssBaseline />
       <AppBar
         position="absolute"
@@ -159,7 +168,9 @@ const HomePage: React.FC = () => {
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
+        <List>
+          <MainListItems onSignOut={signOutClick} />
+        </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />

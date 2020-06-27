@@ -6,7 +6,11 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import DescriptionIcon from '@material-ui/icons/Description';
 
-const mainListItems = (
+type Props = {
+  onSignOut: () => void;
+};
+
+const MainListItems: React.FC<Props> = ({ onSignOut }: Props) => (
   <div>
     <ListItem button>
       <ListItemIcon>
@@ -20,7 +24,7 @@ const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="記事別統計" />
     </ListItem>
-    <ListItem button>
+    <ListItem button onClick={onSignOut}>
       <ListItemIcon>
         <DeleteForeverIcon />
       </ListItemIcon>
@@ -29,4 +33,4 @@ const mainListItems = (
   </div>
 );
 
-export default mainListItems;
+export default MainListItems;
